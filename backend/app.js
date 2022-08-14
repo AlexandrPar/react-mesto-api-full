@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
@@ -25,6 +26,15 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(helmet());
 app.use(requestLogger);
+app.use(cors({
+  origin: [
+    'http://alexander.par.nomoredomains.sbs',
+    'https://alexander.par.nomoredomains.sbs',
+    'http://localhost:3000',
+    'https://localhost:3000',
+  ],
+  credentials: true,
+}));
 app.use('/', roterAutoriz);
 app.use('/', routerUsers);
 app.use('/', routerCards);

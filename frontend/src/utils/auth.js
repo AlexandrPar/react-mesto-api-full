@@ -2,9 +2,13 @@ const BASE_URL = 'http://alexander.par.nomoredomains.sbs';
 
 function getRequest(res) {
   if (res.ok) {
+    return res.json();
+  } else {
     return res.json()
+      .then(data => {
+        throw new Error(data.error || data.message);
+      });
   }
-  return Promise.reject(`Ошибка: ${res.status}`)
 }
 
 export const signup = (email, password) => {

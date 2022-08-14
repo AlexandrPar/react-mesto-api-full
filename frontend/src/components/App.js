@@ -61,7 +61,7 @@ function App() {
                 }
             })
             .catch((err) => {
-                console.log(`Ошибка регистрации: ${err}`);
+                console.log(`Ошибка регистрации: ${err}`, { email, password });
                 handleInfoTooltip();
                 setTooltipStatus({
                     url: fail,
@@ -85,7 +85,7 @@ function App() {
                     url: fail,
                     title: "Что-то пошло не так! Попробуйте ещё раз.",
                 });
-                console.log(`Ошибка авторизации: ${err}`);
+                console.log(`Ошибка авторизации: ${err}`, { email, password });
             });
     };
 
