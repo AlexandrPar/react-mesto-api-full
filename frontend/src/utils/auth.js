@@ -1,4 +1,4 @@
-const BASE_URL = 'https://auth.nomoreparties.co';
+const BASE_URL = 'http://alexander.par.nomoredomains.sbs';
 
 function getRequest(res) {
   if (res.ok) {
