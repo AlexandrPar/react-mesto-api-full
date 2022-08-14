@@ -31,7 +31,7 @@ function App() {
     const [tooltipStatus, setTooltipStatus] = useState({ url: "", title: "" });
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [userData, setUserData] = useState({});
-    const email = userData.email
+    const [email, setEmail] = useState('');
     const history = useHistory();
 
     useEffect(() => {
@@ -90,19 +90,16 @@ function App() {
     };
 
     function tokenCheck() {
+        let token = localStorage.getItem("token");
         if (localStorage.getItem("token")) {
-            const token = localStorage.getItem("token");
             auth.chekToken(token).then((res) => {
                 if (res) {
-                    const userData = {
-                        email: res.data.email,
-                        password: res.data.password,
-                    };
+                    setEmail(res.email);
                     setLoggedIn(true);
                     setUserData(userData);
                 }
             }).catch((err) => {
-                console.log(`Ошибка проверка токена: ${err}`);
+                console.log(`Ошибка проверка токена: ${err}`, email);
             });
         }
     };
