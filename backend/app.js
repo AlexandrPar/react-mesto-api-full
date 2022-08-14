@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const roterAutoriz = require('./routes/autorization');
+const cors = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 const NotFoundError = require('./errors/NotFoundError');
@@ -26,15 +26,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(helmet());
 app.use(requestLogger);
-app.use(cors({
-  origin: [
-    'http://alexander.par.nomoredomains.sbs',
-    'https://alexander.par.nomoredomains.sbs',
-    'http://localhost:3000',
-    'https://localhost:3000',
-  ],
-  credentials: true,
-}));
+app.use(cors);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.use('/', roterAutoriz);
 app.use('/', routerUsers);
 app.use('/', routerCards);
