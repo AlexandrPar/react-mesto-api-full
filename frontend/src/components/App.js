@@ -40,6 +40,7 @@ function App() {
             api.getProfileInfo(token)
                 .then((itemUser) => {
                     setCurrentUser(itemUser)
+                    console.log(itemUser);
                 })
                 .catch((err) => {
                     console.log(`Ошибка получения данных: ${err}`);
