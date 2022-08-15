@@ -35,7 +35,7 @@ function App() {
     const history = useHistory();
 
     useEffect(() => {
-        let token = localStorage.getItem('token');
+        let token = localStorage.getItem('jwt');
         if (loggedIn) {
             api.getProfileInfo(token)
                 .then((itemUser) => {
@@ -85,7 +85,7 @@ function App() {
             .signin(email, password)
             .then((data) => {
                 if (data.token) {
-                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("jwt", data.token);
                     tokenCheck();
                 }
             })
@@ -100,8 +100,8 @@ function App() {
     };
 
     function tokenCheck() {
-        let token = localStorage.getItem("token");
-        if (localStorage.getItem("token")) {
+        let token = localStorage.getItem("jwt");
+        if (token) {
             auth.chekToken(token).then((res) => {
                 if (res) {
                     setEmail(res.email);
@@ -115,7 +115,7 @@ function App() {
     };
 
     const signOut = () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("jwt");
         setLoggedIn(false);
         history.push("/login");
     };
