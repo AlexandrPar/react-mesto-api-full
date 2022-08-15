@@ -1,4 +1,4 @@
-const BASE_URL = '//alexander.par.nomoredomains.sbs';
+const BASE_URL = 'api.alexanderpar.students.nomoredomains.sbs';
 
 function getRequest(res) {
   if (res.ok) {
