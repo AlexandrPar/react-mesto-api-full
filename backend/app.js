@@ -1,8 +1,10 @@
 require('dotenv').config();
+
+console.log(process.env.NODE_ENV);
+
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
@@ -19,11 +21,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-});
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(helmet());
 app.use(requestLogger);
