@@ -35,15 +35,24 @@ function App() {
     const history = useHistory();
 
     useEffect(() => {
+        let token = localStorage.getItem('token');
         if (loggedIn) {
-            Promise.all([api.getProfileInfo(), api.getMassivCards()])
-                .then(([itemUser, cards]) => {
-                    setCurrentUser(itemUser);
-                    setCards(cards);
+            api.getProfileInfo(token)
+                .then((itemUser) => {
+                    setCurrentUser(itemUser)
                 })
                 .catch((err) => {
                     console.log(`Ошибка получения данных: ${err}`);
                 });
+            api.getMassivCards(token)
+                .then((cards) => {
+                    setCards(cards);
+                    console.log(cards);
+                })
+                .catch((err) => {
+                    console.log(`Ошибка получения данных: ${err}`);
+                });
+
         }
     }, [loggedIn]);
 

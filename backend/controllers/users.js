@@ -80,7 +80,7 @@ const getUserMe = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(
+  User.useFindAndModify(
     req.user._id,
     { name, about },
     { new: true, runValidators: true },
@@ -104,7 +104,7 @@ const updateAvatar = (req, res, next) => {
   if (!avatar) {
     next(new BadRequestError('Аватар пользователя не найден.'));
   }
-  User.findByIdAndUpdate(
+  User.useFindAndModify(
     req.user._id,
     { avatar },
     { new: true, runValidators: true },
