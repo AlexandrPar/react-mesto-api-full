@@ -27,12 +27,12 @@ export const signin = (email, password) => {
   }).then(getRequest);
 };
 
-export const chekToken = (jwt) => {
+export const chekToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
+      Authorization: `Bearer ${token}`,
     },
   }).then(getRequest);
 };
