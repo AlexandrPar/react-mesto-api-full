@@ -69,7 +69,7 @@ function App() {
             });
     };
 
-    function handleLogin({email, password}) {
+    function handleLogin({ email, password }) {
         auth
             .signin(email, password)
             .then((res) => {
@@ -95,13 +95,12 @@ function App() {
         const token = localStorage.getItem("token");
         if (token) {
             auth
-                .tokenCheck(token)
+                .checkToken(token)
                 .then((res) => {
                     if (res) {
                         setCurrentUser(res)
                         setEmail(res.email);
                         setLoggedIn(true);
-                        console.log(res)
                     }
                 })
                 .catch((err) => {
@@ -114,7 +113,7 @@ function App() {
         setLoggedIn(false);
         setEmail('');
         setCurrentUser('');
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         history.push("/login");
     };
 

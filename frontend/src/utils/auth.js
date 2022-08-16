@@ -14,26 +14,25 @@ export const signup = (email, password) => {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify( {email, password} ),
+    body: JSON.stringify({ email, password }),
   }).then(getRequest);
 };
 
 export const signin = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
-    headers: {'Content-Type': "application/json"},
-    body: JSON.stringify({email, password})
-})
+    headers: { 'Content-Type': "application/json" },
+    body: JSON.stringify({ email, password })
+  })
     .then((res) => getRequest(res))
 };
 
-export const tokenCheck = (token) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
-      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
     },
   }).then(getRequest);
 };
