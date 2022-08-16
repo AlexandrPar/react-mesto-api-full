@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
-const cors = require('cors');
+const cors = require('./middlewares/cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -22,26 +22,7 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, family: 4 });
 
-const options = {
-  origin: [
-    'http://api.alexanderpar.students.nomoredomains.sbs',
-    'https://api.alexanderpar.students.nomoredomains.sbs',
-    'http://alexander.par.nomoredomains.sbs',
-    'https://alexander.par.nomoredomains.sbs',
-    'http://localhost:3000',
-    'https://localhost:3000',
-    'http://localhost:3001',
-    'https://localhost:3001',
-    'https://web.postman.co',
-  ],
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-  methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
-  preflightContinue: false,
-  credentials: false,
-
-};
-
-app.use(cors(options));
+app.use(cors);
 
 app.use(requestLogger);
 
@@ -62,8 +43,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', roterAutoriz);
 app.use('/', routerUsers);
 app.use('/', routerCards);
-app.use(errors());
 app.use(errorLogger);
+app.use(errors());
+
 app.use((req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use((err, req, res, next) => {
