@@ -20,7 +20,7 @@ const roterAutoriz = require('./routes/autorization');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', { useFindAndModify: false, useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect('mongodb://localhost:27017/mestodb', {});
 
 app.use(cors);
 
