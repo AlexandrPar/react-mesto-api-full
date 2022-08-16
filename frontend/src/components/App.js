@@ -110,6 +110,7 @@ function App() {
         localStorage.removeItem("token");
         setLoggedIn(false);
         history.push("/login");
+        localStorage.removeItem('jwt');
     };
 
     useEffect(() => {
