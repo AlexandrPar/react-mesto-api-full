@@ -1,32 +1,34 @@
 require('dotenv').config();
 
-console.log(process.env.NODE_ENV);
-
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const roterAutoriz = require('./routes/autorization');
 const cors = require('./middlewares/cors');
 
-const { PORT = 3000 } = process.env;
-const NotFoundError = require('./errors/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+mongoose.connect('mongodb://localhost:27017/mestodb');
+
+const { PORT = 3000 } = process.env;
+
+const NotFoundError = require('./errors/NotFoundError');
+
+app.options('*', cors);
+app.use(cors);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-mongoose.connect('mongodb://localhost:27017/mestodb');
-
+app.use(cookieParser());
 app.use(helmet());
 app.use(requestLogger);
-app.use(cors);
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
