@@ -43,9 +43,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', roterAutoriz);
 app.use('/', routerUsers);
 app.use('/', routerCards);
-app.use(errorLogger);
 app.use(errors());
-
+app.use(errorLogger);
 app.use((req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use((err, req, res, next) => {

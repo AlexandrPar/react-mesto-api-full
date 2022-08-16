@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const validator = require('validator');
 const { celebrate, Joi } = require('celebrate');
+const BadRequestError = require('../errors/BadRequestError');
 
 const {
   getUsers,
@@ -21,11 +23,16 @@ router.patch('/users/me', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   })
-    .unknown(true),
+    .unknown(false),
 }), updateUser);
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri({ scheme: ['http', 'https'] }),
+    avatar: Joi.string().custom((value) => {
+      if (!validator.isURL(value, { require_protocol: true })) {
+        throw new BadRequestError('Некорректный URL адрес');
+      }
+      return value;
+    }),
   }),
 }), updateAvatar);
 
