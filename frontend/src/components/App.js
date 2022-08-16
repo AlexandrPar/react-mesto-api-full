@@ -30,21 +30,8 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [tooltipStatus, setTooltipStatus] = useState({ url: "", title: "" });
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState('');
     const history = useHistory();
-
-    useEffect(() => {
-        if (loggedIn) {
-            Promise.all([api.getProfileInfo(), api.getMassivCards()])
-                .then(([user, cards]) => {
-                    setCurrentUser(user);
-                    setCards(cards);
-                })
-                .catch((err) => {
-                    console.log(`Ошибка получения данных: ${err}`);
-                });
-        }
-    }, [loggedIn]);
 
     function handleRegister({ email, password }) {
         return auth
@@ -74,9 +61,7 @@ function App() {
             .signin(email, password)
             .then((res) => {
                 if (res.token) {
-                    localStorage.setItem("token", res.token);
-                    setLoggedIn(true);
-                    setEmail(email);
+                    localStorage.setItem('token', res.token);
                     tokenCheck();
                 }
             })
@@ -91,8 +76,27 @@ function App() {
             });
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (loggedIn) {
+
+            api.getProfileInfo(token)
+                .then((user) => {
+                    setCurrentUser(user)
+                })
+                .catch(err => console.log(err));
+
+            api.getMassivCards(token)
+                .then((cards) => {
+                    setCards(cards);
+                })
+                .catch(err => console.log(err))
+
+        }
+    }, [loggedIn]);
+
     function tokenCheck() {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (token) {
             auth
                 .checkToken(token)
@@ -101,6 +105,7 @@ function App() {
                         setCurrentUser(res)
                         setEmail(res.email);
                         setLoggedIn(true);
+                        history.push('/');
                     }
                 })
                 .catch((err) => {
@@ -113,13 +118,13 @@ function App() {
         setLoggedIn(false);
         setEmail('');
         setCurrentUser('');
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         history.push("/login");
     };
 
     useEffect(() => {
         tokenCheck();
-    }, [loggedIn]);
+    }, []);
 
     useEffect(() => {
         if (loggedIn) {

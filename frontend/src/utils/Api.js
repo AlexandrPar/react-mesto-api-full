@@ -11,10 +11,13 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`)
     }
 
-     getMassivCards(){
+     getMassivCards(token){
         return fetch(`${this._url}/cards`, {
             method: "GET",
-            headers: this._headers
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              "Content-Type": "application/json",
+          }
         })
             .then(res => {
                 return this._getRequest(res)
@@ -24,7 +27,10 @@ class Api {
     addNewCard(item) {
         return fetch(`${this._url}/cards`, {
           method: 'POST',
-          headers: this._headers,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(item)
         })
           .then((res) => {
@@ -35,17 +41,23 @@ class Api {
       deleteCard(id) {
         return fetch(`${this._url}/cards/${id}`, {
           method: 'DELETE',
-          headers: this._headers
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+          },
         })
           .then((res) => {
             return this._getRequest(res)
           })
       }
 
-      getProfileInfo(){
+      getProfileInfo(token){
         return fetch(`${this._url}/users/me`, {
             method: "GET",
-            headers: this._headers
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              "Content-Type": "application/json",
+          }
           })
             .then((res) => {
               return this._getRequest(res)
@@ -55,7 +67,10 @@ class Api {
       renameProfileInfo(item) {
         return fetch(`${this._url}/users/me`, {
           method: 'PATCH',
-          headers: this._headers,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(item)
         })
           .then((res) => {
@@ -66,7 +81,10 @@ class Api {
       replaceProfileAvatar(item) {
         return fetch(`${this._url}/users/me/avatar`, {
           method: 'PATCH',
-          headers: this._headers,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(item)
         })
           .then((res) => {
@@ -77,8 +95,10 @@ class Api {
       getCardLike(id) {
         return fetch(`${this._url}/cards/${id}/likes`, {
           method:'PUT',
-          headers: this._headers,
-        })
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+        }})
           .then((res) => {
             return this._getRequest(res)
           });
@@ -87,8 +107,10 @@ class Api {
       deleteCardLike(id) {
         return fetch(`${this._url}/cards/${id}/likes`, {
           method:'DELETE',
-          headers: this._headers,
-        })
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+        }})
           .then((res) => {
             return this._getRequest(res)
           });
@@ -97,8 +119,4 @@ class Api {
 
 export const api = new Api({
   url: "https://api.alexanderpar.students.nomoredomains.sbs",
-  headers: {
-    "Content-Type": "application/json",
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
-  }
 });
