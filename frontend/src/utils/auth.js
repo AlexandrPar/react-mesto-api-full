@@ -21,14 +21,10 @@ export const signup = (email, password) => {
 export const signin = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
-    credentials: 'include',
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify( {email, password} , password )
-  })
-    .then(getRequest)
+    headers: {'Content-Type': "application/json"},
+    body: JSON.stringify({email, password})
+})
+    .then((res) => getRequest(res))
 };
 
 export const tokenCheck = (token) => {

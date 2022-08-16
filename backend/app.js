@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const cors = require('./middlewares/cors');
-
+const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const routerUsers = require('./routes/users');
@@ -35,7 +35,6 @@ app.get('/crash-test', () => {
 app.use(helmet());
 
 const { PORT = 3000 } = process.env;
-const NotFoundError = require('./errors/NotFoundError');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,17 +44,7 @@ app.use('/', routerUsers);
 app.use('/', routerCards);
 app.use(errorLogger);
 app.use(errors());
-
-app.use((req, res, next) => next(new NotFoundError('Страница не найдена')));
-
-app.use((err, req, res, next) => {
-  if (err.statusCode && err.statusCode !== 500) {
-    res.status(err.statusCode).send({ message: err.message });
-  } else {
-    res.status(500).send({ message: 'Что-то пошло не так' });
-  }
-  next(err);
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log('Сервер запущен');

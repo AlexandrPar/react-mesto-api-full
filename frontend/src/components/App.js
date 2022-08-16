@@ -69,13 +69,15 @@ function App() {
             });
     };
 
-    function handleLogin(email, password) {
+    function handleLogin({email, password}) {
         auth
             .signin(email, password)
             .then((res) => {
                 if (res.token) {
                     localStorage.setItem("token", res.token);
-                    tokenCheck(localStorage.getItem("token"));
+                    setLoggedIn(true);
+                    setEmail(email);
+                    tokenCheck();
                 }
             })
             .catch((err) => {
@@ -85,6 +87,7 @@ function App() {
                     title: "Что-то пошло не так! Попробуйте ещё раз.",
                 });
                 console.log(`Ошибка авторизации: ${err}`);
+                console.log(email, password);
             });
     };
 
@@ -98,6 +101,7 @@ function App() {
                         setCurrentUser(res)
                         setEmail(res.email);
                         setLoggedIn(true);
+                        console.log(res)
                     }
                 })
                 .catch((err) => {
@@ -110,13 +114,13 @@ function App() {
         setLoggedIn(false);
         setEmail('');
         setCurrentUser('');
-        localStorage.removeItem('jwt');
+        localStorage.removeItem('token');
         history.push("/login");
     };
 
     useEffect(() => {
         tokenCheck();
-    }, []);
+    }, [loggedIn]);
 
     useEffect(() => {
         if (loggedIn) {

@@ -47,6 +47,8 @@ const Login = ({ handleLogin }) => {
                     name="password"
                     placeholder="Пароль"
                     required
+                    minLength="2"
+                    maxLength="200"
                     id="password-input"
                     value={form.password}
                     onChange={handleChange}
