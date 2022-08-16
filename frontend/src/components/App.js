@@ -107,10 +107,11 @@ function App() {
     };
 
     const signOut = () => {
-        localStorage.removeItem("token");
         setLoggedIn(false);
-        history.push("/login");
+        setEmail('');
+        setCurrentUser('');
         localStorage.removeItem('jwt');
+        history.push("/login");
     };
 
     useEffect(() => {
