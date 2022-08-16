@@ -30,30 +30,19 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [tooltipStatus, setTooltipStatus] = useState({ url: "", title: "" });
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-    const [userData, setUserData] = useState({});
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState("");
     const history = useHistory();
 
     useEffect(() => {
-        let token = localStorage.getItem('jwt');
         if (loggedIn) {
-            api.getProfileInfo(token)
-                .then((itemUser) => {
-                    setCurrentUser(itemUser)
-                    console.log(itemUser);
-                })
-                .catch((err) => {
-                    console.log(`Ошибка получения данных: ${err}`);
-                });
-            api.getMassivCards(token)
-                .then((cards) => {
+            Promise.all([api.getProfileInfo(), api.getMassivCards()])
+                .then(([user, cards]) => {
+                    setCurrentUser(user);
                     setCards(cards);
-                    console.log(cards);
                 })
                 .catch((err) => {
                     console.log(`Ошибка получения данных: ${err}`);
                 });
-
         }
     }, [loggedIn]);
 
@@ -71,7 +60,7 @@ function App() {
                 }
             })
             .catch((err) => {
-                console.log(`Ошибка регистрации: ${err}`, { email, password });
+                console.log(`Ошибка регистрации: ${err}`);
                 handleInfoTooltip();
                 setTooltipStatus({
                     url: fail,
@@ -80,13 +69,13 @@ function App() {
             });
     };
 
-    function handleLogin({ email, password }) {
-        return auth
+    function handleLogin(email, password) {
+        auth
             .signin(email, password)
-            .then((data) => {
-                if (data.token) {
-                    localStorage.setItem("jwt", data.token);
-                    tokenCheck();
+            .then((res) => {
+                if (res.token) {
+                    localStorage.setItem("token", res.token);
+                    tokenCheck(localStorage.getItem("token"));
                 }
             })
             .catch((err) => {
@@ -95,27 +84,30 @@ function App() {
                     url: fail,
                     title: "Что-то пошло не так! Попробуйте ещё раз.",
                 });
-                console.log(`Ошибка авторизации: ${err}`, { email, password });
+                console.log(`Ошибка авторизации: ${err}`);
             });
     };
 
     function tokenCheck() {
-        let token = localStorage.getItem("jwt");
+        const token = localStorage.getItem("token");
         if (token) {
-            auth.chekToken(token).then((res) => {
-                if (res) {
-                    setEmail(res.email);
-                    setLoggedIn(true);
-                    setUserData(userData);
-                }
-            }).catch((err) => {
-                console.log(`Ошибка проверка токена: ${err}`, email);
-            });
+            auth
+                .tokenCheck(token)
+                .then((res) => {
+                    if (res) {
+                        setCurrentUser(res)
+                        setEmail(res.email);
+                        setLoggedIn(true);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     };
 
     const signOut = () => {
-        localStorage.removeItem("jwt");
+        localStorage.removeItem("token");
         setLoggedIn(false);
         history.push("/login");
     };
@@ -147,7 +139,7 @@ function App() {
     }
 
     function handleCardLike(card) {
-        const isLiked = card.likes.some((user) => user._id === currentUser._id);
+        const isLiked = card.likes.some((user) => user === currentUser._id);
         const request = isLiked ? api.deleteCardLike(card._id) : api.getCardLike(card._id);
         request
             .then((newCard) => {
@@ -160,10 +152,11 @@ function App() {
             });
     }
 
-    function handleUpdateUser(data) {
-        api.renameProfileInfo(data)
-            .then((itemUser) => {
-                setCurrentUser(itemUser);
+    function handleUpdateUser(item) {
+        api.renameProfileInfo(item)
+            .then((user) => {
+                setCurrentUser(user);
+                console.log(item)
                 closeAllPopups();
             })
             .catch((err) => {
@@ -173,8 +166,8 @@ function App() {
 
     function handleUpdateAvatar(avatar) {
         api.replaceProfileAvatar(avatar)
-            .then((itemUser) => {
-                setCurrentUser(itemUser);
+            .then((user) => {
+                setCurrentUser(user);
                 closeAllPopups();
             })
             .catch((err) => {

@@ -1,10 +1,13 @@
 const allowedCors = [
+  'http://api.alexanderpar.students.nomoredomains.sbs',
+  'https://api.alexanderpar.students.nomoredomains.sbs',
   'http://alexander.par.nomoredomains.sbs',
   'https://alexander.par.nomoredomains.sbs',
   'http://localhost:3000',
   'https://localhost:3000',
   'http://localhost:3001',
   'https://localhost:3001',
+  'https://web.postman.co',
 ];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';

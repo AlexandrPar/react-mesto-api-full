@@ -21,7 +21,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
                 <button type="button" aria-label="Добавить картинку" className="profile__add-button" onClick={onAddPlace}></button>
             </section>
             <section className="gallery">
-                {cards.length > 0 && cards.map((card) => (
+                {cards.map((card) => (
                     <Card
                         key={card._id}
                         link={card.link}

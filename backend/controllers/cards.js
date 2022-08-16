@@ -14,7 +14,7 @@ const createCard = (req, res, next) => {
   const ownerCard = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner: ownerCard })
-    .then((card) => res.status(201).send({ card }))
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
@@ -32,7 +32,7 @@ const deleteCard = (req, res, next) => {
       if (req.user._id.toString() !== card.owner.toString()) {
         throw new ForbiddenAccessError('Нельзя удалять чужую card!');
       }
-      res.status(200).send({ card });
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -52,7 +52,7 @@ const likeCard = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Передан несуществующий _id карточки.'));
       }
-      return res.status(200).send({ card });
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -73,7 +73,7 @@ const dislikeCard = (req, res, next) => {
         next(new NotFoundError('Передан несуществующий _id карточки.'));
         return;
       }
-      res.status(200).send({ card });
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

@@ -12,7 +12,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.send(users))
     .catch(next);
 };
 
@@ -23,7 +23,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь по указанному _id не найден.'));
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -63,7 +63,8 @@ const login = (req, res, next) => {
   return User.findUser(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY', { expiresIn: '7d' });
-      res.send({ token });
+      const { name, avatar } = user;
+      res.send({ token, name, avatar });
     })
     .catch((err) => {
       next(new UnauthorizedError(err.message));
@@ -86,7 +87,7 @@ const updateUser = (req, res, next) => {
       if (!user) {
         next(new BadRequestError('Пользователь по указанному _id не найден.'));
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -110,7 +111,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь с указанным _id не найден.'));
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
