@@ -20,13 +20,15 @@ export const signup = (email, password) => {
 
 export const signin = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
+    method: 'POST',
+    credentials: 'include',
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify( email, password ),
-  }).then(getRequest);
+    body: JSON.stringify( {email, password} , password )
+  })
+    .then(getRequest)
 };
 
 export const tokenCheck = (token) => {
